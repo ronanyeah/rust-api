@@ -1,5 +1,6 @@
 use axum::{
     extract::State,
+    http::status::StatusCode,
     routing::{get, post},
     Json, Router,
 };
@@ -35,6 +36,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let app = Router::new()
         .route("/healthz", get(health_handler))
+        .route("/text", get(text_handler))
         .route("/state", post(state_handler))
         .with_state(app_state)
         .layer(tower::ServiceBuilder::new().layer(cors));
@@ -48,7 +50,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-async fn health_handler() -> &'static str {
+async fn health_handler() -> StatusCode {
+    StatusCode::OK
+}
+
+async fn text_handler() -> &'static str {
     "OK"
 }
 
